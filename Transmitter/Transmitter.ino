@@ -1,7 +1,7 @@
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
-RF24 radio(10, 9); // CE, CSN
+RF24 radio(9,10); // CE, CSN
 const uint64_t address = 0xE8E8F0F0E1LL;
 
 #include "DHT.h"
@@ -75,6 +75,8 @@ void loop()
   {
     data.temp=tempTmp;
     data.humid=humidTmp;
+    Serial.print("Temprature: ");Serial.print(data.temp);Serial.print("\u00B0");Serial.print("C     ");
+    Serial.print("Humidity: ");Serial.print(data.humid);
   }
 
 //Pressure
@@ -91,7 +93,7 @@ void loop()
         if (status != 0) {
           Serial.print("Pressure: ");
           Serial.print(P);
-          Serial.println(" hPa");
+          Serial.print(" hPa   ");
         }
       }
     }
@@ -112,7 +114,8 @@ void loop()
     data.lightIntensity=int(valf);
   }
   
-  
+
+ 
   if(!radio.write(&data, sizeof(data)))
   {
     Serial.println("Fail to transmit");  
