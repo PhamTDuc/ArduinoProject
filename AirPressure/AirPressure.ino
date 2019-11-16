@@ -9,7 +9,8 @@ void setup() {
 
   if (success) {
     Serial.println("BMP180 init success");
-  }
+  }else
+  { Serial.println("Failed");}
 }
 
 void loop() {

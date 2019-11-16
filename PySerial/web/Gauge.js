@@ -199,7 +199,7 @@
             gaugeHelper.applyGaugeConfig(chart.config);
             chart.config.options.animation.onComplete = function(chartElement) {
                 gaugeHelper.updateGaugeDimensions();
-                gaugeHelper.animateArrow();
+                // gaugeHelper.animateArrow();
             };
             Chart.controllers.doughnut.prototype.initialize.apply(this, arguments);
         },
@@ -211,7 +211,9 @@
             if (gaugeHelper.showMarkers) {
                 gaugeHelper.renderLimits();
             }
-            gaugeHelper.renderSmallValueArrow(gaugeHelper.minValue);
+            // gaugeHelper.renderSmallValueArrow(gaugeHelper.minValue);
+            gaugeHelper.renderValueArrow();
+
         }
     });
 })();

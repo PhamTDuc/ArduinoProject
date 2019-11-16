@@ -17,7 +17,7 @@
 </head>
 <body>
     <div class="container-fluid bg-light">
-        <div class="col col-12 m-0 p-0">
+        <div class="col col-12 m-2 p-0">
             <div class="row justify-content-center">
                 <form class="form-inline">
                   <div class="form-group mb-2">
@@ -25,16 +25,20 @@
                     <input type="text" class="form-control" id="inputPort" placeholder="Example: COM4">
                     <label for="inputBaudrate" class="">Baudrate</label>
                     <input type="number" class="form-control" id="inputBaudrate" placeholder="Example: 9600">
-                    <button type="button" class="btn btn-primary my-2 mx-0 my-sm-0 mx-sm-2" onclick="callPort(document.getElementById('inputPort').value,document.getElementById('inputBaudrate').value)">Confirm</button>
+                    <div class="btn-group my-1 mx-md-1" role="group" aria-label="Control">
+                    <button type="button" class="btn btn-primary" onclick="callPort(document.getElementById('inputPort').value,document.getElementById('inputBaudrate').value)">Confirm</button>
+                    <button type="button" class="btn btn-info" onclick="download(GLOBAL.data,'data','text')"><img src="img/save.ico" alt="Save icon" style="width:20px;height:20px"> Save</button>
+                    <button type="button" class="btn btn-warning" onclick="clearData()">Clear</button>
+                </div>
                 </form>
             </div>
         </div>
 
         <div class="row justify-content-center"> 
-            <canvas class="col col-6 col-md-2" id="gaugeTemp"></canvas> 
-            <canvas class="col col-6 col-md-2" id="gaugeHumid"></canvas> 
-            <canvas class="col col-6 col-md-2" id="gaugePressure"></canvas> 
-            <canvas class="col col-6 col-md-2" id="gaugeIntensity"></canvas> 
+            <canvas class="col col-6 col-md-2" id="gaugetemp"></canvas> 
+            <canvas class="col col-6 col-md-2" id="gaugehumid"></canvas> 
+            <canvas class="col col-6 col-md-2" id="gaugepressure"></canvas> 
+            <canvas class="col col-6 col-md-2" id="gaugeintensity"></canvas> 
         </div> 
         <div class="alert alert-danger collapse"
         role="alert" id="invalidAlert"> This is a danger alert—check it out! </div>
@@ -57,218 +61,77 @@
     </div>
 </div>
 <script type="text/javascript">
-    var charttemp = document.getElementById('charttemp').getContext('2d');
-    var myChartTemp = new Chart(charttemp, {
-        type: 'line',
-        data: {
-            labels: ['0ms', '-200ms', '-400ms', '-600ms', '-800ms', '-1000ms'],
-            datasets: [
-            {
-                label: 'Temprature',
-                data: [0,0,0,0,0,0],
-                borderColor: "#ff0000",
-                cubicInterpolationMode:false,
-            },
-            ]
-        },
-        options: {
-            maintainAspectRatio: false,
-            responsive: true,
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        min:0,
-                        max:70,
-                    }
-
-                }]
-            }
-        }
-    });
-    var charthumid = document.getElementById('charthumid').getContext('2d');
-    var myChartHumid = new Chart(charthumid, {
-        type: 'line',
-        data: {
-            labels: ['0ms', '-200ms', '-400ms', '-600ms', '-800ms', '-1000ms'],
-            datasets: [
-            {
-                label: 'Humid',
-                data: [0,0,0,0,0,0],
-                borderColor: "#0080ff",
-                cubicInterpolationMode:false,
-            },
-            ]
-        },
-        options: {
-            maintainAspectRatio: false,
-            responsive: true,
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        min:0,
-                        max:100,
-                    }
-
-                }]
-            }
-        }
-    });
-    var chartpressure = document.getElementById('chartpressure').getContext('2d');
-    var myChartPressure = new Chart(chartpressure, {
-        type: 'line',
-        data: {
-            labels: ['0ms', '-200ms', '-400ms', '-600ms', '-800ms', '-1000ms'],
-            datasets: [
-            {
-                label: 'Pressure',
-                data: [0,0,0,0,0,0],
-                borderColor: "#ababab",
-                cubicInterpolationMode:false,
-            },
-            ]
-        },
-        options: {
-            maintainAspectRatio: false,
-            responsive: true,
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        min:0,
-                        max:1100,
-                    }
-
-                }]
-            }
-        }
-    });
-    var chartintensity = document.getElementById('chartintensity').getContext('2d');
-    var myChartIntensity = new Chart(chartintensity, {
-        type: 'line',
-        data: {
-            labels: ['0ms', '-200ms', '-400ms', '-600ms', '-800ms', '-1000ms'],
-            datasets: [
-            {
-                label: 'Intensity',
-                data: [0,0,0,0,0,0],
-                borderColor: "#ffff00",
-                cubicInterpolationMode:false,
-            },
-            ]
-        },
-        options: {
-            maintainAspectRatio: false,
-            responsive: true,
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        min:0,
-                        max:70000,
-                    }
-
-                }]
-            }
-        }
-    });
-
-    var gaugetemp = document.getElementById("gaugeTemp").getContext("2d");
-    var gaugeTemp = new Chart(gaugetemp,
+    function generateChart(id,label,borderColor,minlimit,maxlimit)
     {
-        type: "tsgauge",
+        var chartid = document.getElementById(id).getContext('2d');
+        var myChart = new Chart(chartid, {
+            type: 'line',
             data: {
-                datasets: [{
-                    backgroundColor: ["#0080ff","#02eb1a", "#ffff00", "#ff0000"],
-                    borderWidth: 0,
-                    gaugeData: {
-                        value: 25,
-                        valueColor: "#ff0000"
-                    },
-                    gaugeLimits: [0, 15, 30, 45,60]
-                }]
+                labels: ['0ms', '-200ms', '-400ms', '-600ms', '-800ms', '-1000ms'],
+                datasets: [
+                {
+                    label: label,
+                    data: [0,0,0,0,0,0],
+                    borderColor: borderColor,
+                    cubicInterpolationMode:false,
+                },
+                ]
             },
             options: {
-                    events: [],
-                    showMarkers: true,
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    markerFormatFn: function (value){return value+"°C";},
+                maintainAspectRatio: false,
+                responsive: true,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            min:minlimit,
+                            max:maxlimit,
+                        }
+
+                    }]
+                }
             }
-
-    })
-
-    var gaugehumid = document.getElementById("gaugeHumid").getContext("2d");
-    var gaugeHumid = new Chart(gaugehumid,
+        });
+        return myChart;
+    }
+    var chartTemp = generateChart("charttemp","Temprature","#ff0000",0,70);
+    var chartHumid = generateChart("charthumid","Humidity","#0080ff",0,100);
+    var chartPressure = generateChart("chartpressure","Pressure","#ababab",0,1110);
+    var chartIntensity = generateChart("chartintensity","Intensity","#ffff00",0,70000);
+    
+    function generateGauge(id,backgroundColor,valueColor,gaugeLimits,marker)
     {
-        type: "tsgauge",
-            data: {
-                datasets: [{
-                    backgroundColor: ["#ffffff", "#add6ff","#59acff", "#0080ff"],
-                    borderWidth: 0,
-                    gaugeData: {
-                        value: 30,
-                        valueColor: "#59acff"
-                    },
-                    gaugeLimits: [0, 25, 50, 75,100]
-                }]
-            },
-            options: {
-                    events: [],
-                    showMarkers: true,
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    markerFormatFn: function (value){return value+"%";},
-            }
+        var gaugeid = document.getElementById(id).getContext("2d");
+        var gauge = new Chart(gaugeid,
+        {
+            type: "tsgauge",
+                data: {
+                    datasets: [{
+                        backgroundColor: backgroundColor,
+                        borderWidth: 0,
+                        gaugeData: {
+                            value: 0,
+                            valueColor: valueColor
+                        },
+                        gaugeLimits: gaugeLimits
+                    }]
+                },
+                options: {
+                        events: [],
+                        showMarkers: true,
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        markerFormatFn: function (value){return value+marker;},
+                }
 
-    })
-
-    var gaugepressure = document.getElementById("gaugePressure").getContext("2d");
-    var gaugePressure = new Chart(gaugepressure,
-    {
-        type: "tsgauge",
-            data: {
-                datasets: [{
-                    backgroundColor: "#c7c7c7",
-                    borderWidth: 0,
-                    gaugeData: {
-                        value:400,
-                        valueColor: "#858585"
-                    },
-                    gaugeLimits: [300, 500, 700, 900 ,1100]
-                }]
-            },
-            options: {
-                    events: [],
-                    showMarkers: true,
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    markerFormatFn: function (value){return value+"hPa";},
-            }
-
-    })
-
-    var gaugeintensity = document.getElementById("gaugeIntensity").getContext("2d");
-    var gaugeIntensity = new Chart(gaugeintensity,
-    {
-        type: "tsgauge",
-            data: {
-                datasets: [{
-                    backgroundColor: ["#8c8c8c","#fff200","#fffcbd","#ffffff"],
-                    borderWidth: 0,
-                    gaugeData: {
-                        value:4000,
-                        valueColor: "#e9f500"
-                    },
-                    gaugeLimits: [0, 17500, 35000, 52500  ,70000]
-                }]
-            },
-            options: {
-                    events: [],
-                    showMarkers: true,
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    markerFormatFn: function (value){return value+"lux";},
-            }
-
-    })
+        })
+        return gauge;
+    }
+    var gaugeTemp = generateGauge("gaugetemp",["#0080ff","#02eb1a", "#ffff00", "#ff0000"],"#ff0000",[0,15,30,45,60],"°C");
+    var gaugeHumid = generateGauge("gaugehumid",["#ffffff", "#add6ff","#59acff", "#0080ff"],"#59acff",[0, 25, 50, 75,100],"%");
+    var gaugePressure = generateGauge("gaugepressure","#c7c7c7","#858585",[300, 500, 700, 900 ,1100],"hPa");
+    var gaugeIntensity = generateGauge("gaugeintensity",["#8c8c8c","#fff200","#fffcbd","#ffffff"],"#e9f500",[0, 17500, 35000, 52500  ,70000],"lux");
+   
+ 
     async function callPort(port,baudrate)
     {   
         baud = parseInt(baudrate)
@@ -288,8 +151,13 @@
         $('#invalidAlert').hide();
     }
 
-    async function updateData(charttemp,charthumid,chartpressure,chartintensity)
+    var GLOBAL= GLOBAL || {};
+    GLOBAL.data="";
+
+    async function updateData(charttemp,charthumid,chartpressure,chartintensity,gaugetemp,gaugehumid,gaugepressure,gaugeintensity)
     {   let return_val = await eel.python_method()();
+
+        GLOBAL.data=GLOBAL.data.concat(JSON.stringify(return_val),"\n");
 
         let tempdata=charttemp.data.datasets[0].data;
         tempdata.unshift(return_val.temp);
@@ -307,14 +175,48 @@
         intensitydata.unshift(return_val.intensity);
         intensitydata.pop();
 
+        gaugetemp.data.datasets[0].gaugeData.value=return_val.temp;
+        gaugehumid.data.datasets[0].gaugeData.value=return_val.humid;
+        gaugepressure.data.datasets[0].gaugeData.value=return_val.pressure;
+        gaugeintensity.data.datasets[0].gaugeData.value=return_val.intensity;
         
+
 
         charttemp.update(0);
         charthumid.update(0);
         chartpressure.update(0);
         chartintensity.update(0);
+
+        gaugetemp.update(0);
+        gaugehumid.update(0);
+        gaugepressure.update(0);
+        gaugeintensity.update(0);
     }
-    setInterval(updateData, 100, myChartTemp, myChartHumid,myChartPressure,myChartIntensity);
+    GLOBAL.interval_obj=setInterval(updateData, 100 , chartTemp, chartHumid,chartPressure,chartIntensity,gaugeTemp,gaugeHumid,gaugePressure,gaugeIntensity);
+
+
+    // Function to download data to a file
+    function download(data, filename, type) {
+        var file = new Blob([data], {type: type});
+        if (window.navigator.msSaveOrOpenBlob) // IE10+
+            window.navigator.msSaveOrOpenBlob(file, filename);
+        else { // Others
+            var a = document.createElement("a"),
+                    url = URL.createObjectURL(file);
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function() {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);  
+            }, 0); 
+        }
+    }
+    function clearData()
+    {   
+        GLOBAL.data="";
+    }
 </script>
 
 </body>

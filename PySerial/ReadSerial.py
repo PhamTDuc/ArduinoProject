@@ -27,8 +27,10 @@ def callPort(pt, baud, timeout=1):
                 dataPort = ser.readline()
                 data['humid'] = float(dataPort)
                 # data['humid'] = random.randint(1, 500)
-                data['pressure'] = random.randint(1, 200)
-                data['intensity'] = random.randint(1, 100)
+                dataPort = ser.readline()
+                data['pressure'] = float(dataPort)
+                dataPort = ser.readline()
+                data['intensity'] = float(dataPort)
                 eel.valid()
             except ValueError:
                 eel.invalid("<b>Data Invalid</b>: Wrong Port or Poor Signal")
