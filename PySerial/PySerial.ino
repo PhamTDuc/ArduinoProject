@@ -4,7 +4,9 @@ void setup() {
 }
 
 void loop() {
-  Serial.println(random(-273,60));
-  Serial.println(random(1,200));
+  Serial.println(random(0,60));
+  Serial.println(random(0,100));
+  Serial.println(random(300,1100));
+  Serial.println(random(0,70000));
   delay(200);
 }
