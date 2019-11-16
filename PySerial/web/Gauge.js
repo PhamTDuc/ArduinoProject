@@ -139,7 +139,7 @@
         var angle = this.getAngleOfValue(value);
         this.ctx.lineWidth = 2;
         this.ctx.globalCompositeOperation = "destination-out";
-        this.renderArrow(this.gaugeRadius - 1, angle, this.arrowLength + 1, this.arrowAngle, "#FFFFFF");
+        this.renderArrow(this.gaugeRadius - 1, angle, this.arrowLength + 1, this.arrowAngle, "#03a9fc");
         this.ctx.stroke();
     };
     GaugeChartHelper.prototype.renderArrow = function(radius, angle, arrowLength, arrowAngle, arrowColor) {
@@ -183,14 +183,14 @@
             animateRotate: true,
             animateScale: false
         },
-        cutoutPercentage: 95,
+        cutoutPercentage: 92,
         rotation: Math.PI,
         circumference: Math.PI,
         legend: {
             display: false
         },
         scales: {},
-        arrowColor: "#444"
+        arrowColor: "#03a9fc"
     };
     Chart.controllers.tsgauge = Chart.controllers.doughnut.extend({
         initialize: function(chart) {

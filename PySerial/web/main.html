@@ -95,11 +95,11 @@
         return myChart;
     }
     var chartTemp = generateChart("charttemp","Temprature","#ff0000",0,70);
-    var chartHumid = generateChart("charthumid","Humidity","#0080ff",0,100);
-    var chartPressure = generateChart("chartpressure","Pressure","#ababab",0,1110);
-    var chartIntensity = generateChart("chartintensity","Intensity","#ffff00",0,70000);
+    var chartHumid = generateChart("charthumid","Humidity","#59acff",0,100);
+    var chartPressure = generateChart("chartpressure","Pressure","#c7c7c7",0,1110);
+    var chartIntensity = generateChart("chartintensity","Intensity","#ffa200",0,70000);
     
-    function generateGauge(id,backgroundColor,valueColor,gaugeLimits,marker)
+    function generateGauge(id,backgroundColor,valueColor,gaugeLimits,marker,arrowColor,fontColor)
     {
         var gaugeid = document.getElementById(id).getContext("2d");
         var gauge = new Chart(gaugeid,
@@ -108,7 +108,7 @@
                 data: {
                     datasets: [{
                         backgroundColor: backgroundColor,
-                        borderWidth: 0,
+                        borderWidth:1,
                         gaugeData: {
                             value: 0,
                             valueColor: valueColor
@@ -122,15 +122,18 @@
                         responsive: true,
                         maintainAspectRatio: true,
                         markerFormatFn: function (value){return value+marker;},
+                        arrowColor:arrowColor,
+                        defaultFontColor:fontColor,
+                        // defaultFontSize:16,
                 }
 
         })
         return gauge;
     }
-    var gaugeTemp = generateGauge("gaugetemp",["#0080ff","#02eb1a", "#ffff00", "#ff0000"],"#ff0000",[0,15,30,45,60],"°C");
-    var gaugeHumid = generateGauge("gaugehumid",["#ffffff", "#add6ff","#59acff", "#0080ff"],"#59acff",[0, 25, 50, 75,100],"%");
-    var gaugePressure = generateGauge("gaugepressure","#c7c7c7","#858585",[300, 500, 700, 900 ,1100],"hPa");
-    var gaugeIntensity = generateGauge("gaugeintensity",["#8c8c8c","#fff200","#fffcbd","#ffffff"],"#e9f500",[0, 17500, 35000, 52500  ,70000],"lux");
+    var gaugeTemp = generateGauge("gaugetemp","#ff0000","#ff0000",[0,15,30,45,60],"°C","#ff0000","#ff0000");
+    var gaugeHumid = generateGauge("gaugehumid","#59acff","#59acff",[0, 25, 50, 75,100],"%","#59acff");
+    var gaugePressure = generateGauge("gaugepressure","#c7c7c7","#c7c7c7",[300, 500, 700, 900 ,1100],"hPa","#c7c7c7");
+    var gaugeIntensity = generateGauge("gaugeintensity","#ffa200","#ffa200",[0, 17500, 35000, 52500  ,70000],"lux","#ffa200");
    
  
     async function callPort(port,baudrate)
@@ -251,7 +254,7 @@
     {   
         GLOBAL.data=[];
     }
-    
+
 </script>
 
 </body>
