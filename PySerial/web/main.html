@@ -13,11 +13,13 @@
     <script type="text/javascript" src="Gauge.js"></script>
     <script type="text/javascript" src="bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="eel.js"></script>
-
+    <style>
+        #ShowTime {font-size:8vmin;letter-spacing:5px;color:#17d4fe;padding:4px;background: #373737;border-radius: 4px;text-align: center;}
+    </style>
 </head>
 <body>
     <div class="container-fluid bg-light">
-        <div class="col col-12 m-2 p-0">
+        <div class="col col-12 m-0 p-0">
             <div class="row justify-content-center">
                 <form class="form-inline">
                   <div class="form-group mb-2">
@@ -30,10 +32,11 @@
                     <button type="button" class="btn btn-warning" onclick="clearData()">ClearData</button>
                     <button type="button" class="btn btn-info" onclick="downloadJSON(GLOBAL.data,'Untitled','text')"><img src="img/save.ico" alt="Save icon" style="width:20px;height:20px"> JSON</button> 
                     <button type="button" class="btn btn-info" id="SaveCSV" onclick="downloadCSV(GLOBAL.data,'Untitled.csv','text/csv;charset=UTF-8')"><img src="img/save.ico" alt="Save icon" style="width:20px;height:20px"> CSV</button>
-                </div>
+                   </div>
+                   </div>
                 </form>
-            </div>
         </div>
+        <div class="row justify-content-center" ><div id="ShowTime" onload="showTimer()">showTime</div></div>
 
         <div class="row justify-content-center"> 
             <canvas class="col col-6 col-md-2" id="gaugetemp"></canvas> 
@@ -41,8 +44,10 @@
             <canvas class="col col-6 col-md-2" id="gaugepressure"></canvas> 
             <canvas class="col col-6 col-md-2" id="gaugeintensity"></canvas> 
         </div> 
-        <div class="alert alert-danger collapse"
+        <div class="row justify-content-center">
+            <div class="alert alert-danger text--center"
         role="alert" id="invalidAlert"> This is a danger alert—check it out! </div>
+        </div>
 
 
         <div class="row justify-content-center" style="height:100vh">
@@ -255,6 +260,25 @@
         GLOBAL.data=[];
     }
 
+    function showTimer()
+    {
+        var date = new Date();
+            var h = date.getHours(); // 0 - 23
+            var m = date.getMinutes(); // 0 - 59
+            var s = date.getSeconds(); // 0 - 59
+            var ms = date.getMilliseconds();
+            
+            h = (h < 10) ? "0" + h : h;
+            m = (m < 10) ? "0" + m : m;
+            s = (s < 10) ? "0" + s : s;
+            ms =(ms<10)? "0"+ ms:ms;          
+            ms =(ms<100)? "0"+ ms:ms;          
+            var time = h + ":" + m + ":" + s+'.'+ms;
+        $("#ShowTime").html(time);
+        setTimeout(showTimer,50);
+    }
+    showTimer();
+    
 </script>
 
 </body>
