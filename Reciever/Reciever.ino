@@ -1,7 +1,7 @@
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
-RF24 radio(10,9); // CE, CSN
+RF24 radio(9,10); // CE, CSN
 const uint64_t address = 0xE8E8F0F0E1LL;
 void setup() {
   Serial.begin(9600);
@@ -26,15 +26,19 @@ void loop() {
   {
     Data data;
     radio.read(&data,sizeof(data));
-    Serial.print("Temprature: ");Serial.print(data.temp);Serial.print("\u00B0");Serial.print("C     ");
-    Serial.print("Humidity: ");Serial.print(data.humid);
-    Serial.print("     Light intensity: ");Serial.print(data.lightIntensity);Serial.print("lux");
-    Serial.print("     Air Pressure: ");Serial.print(data.airPressure);Serial.println("hPa");
+    //Serial.print("Temprature: ");Serial.print(data.temp);Serial.print("\u00B0");Serial.print("C     ");
+    //Serial.print("Humidity: ");Serial.print(data.humid);
+    //Serial.print("     Light intensity: ");Serial.print(data.lightIntensity);Serial.print("lux");
+    //Serial.print("     Air Pressure: ");Serial.print(data.airPressure);Serial.println("hPa");
+    Serial.println(data.temp);
+    Serial.println(data.humid);
+     Serial.println(data.airPressure);
+    Serial.println(data.lightIntensity);
     
   }else
   {
       Serial.println("Fail to recieve");
      
   }
-  delay(1000);
+  delay(200);
 }

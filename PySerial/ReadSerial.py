@@ -17,7 +17,6 @@ def callPort(pt, baud, timeout=1):
         ser.baudrate = baud
         ser.timeout = timeout
         ser.open()
-        eel.sleep(1.0)
         while ser.is_open:
             try:
                 dataPort = ser.readline()
@@ -52,6 +51,6 @@ my_options = {
 }
 eel.init("web")
 try:
-    eel.start("main.html", block=True, options=my_options)
+    eel.start("main.html", block=True)
 except (SystemExit, MemoryError, KeyboardInterrupt):
     pass

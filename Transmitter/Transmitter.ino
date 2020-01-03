@@ -120,5 +120,5 @@ void loop()
   {
     Serial.println("Fail to transmit");  
   }
-  delay(1000);
+  delay(100);
 }
